@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Comisiones de Ventas</title>
+    <style>
+        :root {
+            --primary-color: #d32f2f;
+            --primary-light: #ff6659;
+            --primary-dark: #9a0007;
+            --text-color: #333;
+            --bg-color: #fff;
+            --border-color: #ddd;
+            --success-color: #4caf50;
+            --header-bg: #f5f5f5;
+            --negative-color: #e53935;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 15px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 15px;
+        }
+        
+        h1 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+        
+        .description {
+            color: var(--text-color);
+            font-size: 1rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            background-color: var(--header-bg);
+            border: 1px solid var(--border-color);
+            border-bottom: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
+            flex-shrink: 0;
+        }
+        
+        .tab.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        .tab:hover:not(.active) {
+            background-color: var(--primary-light);
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-top: none;
+            background-color: var(--bg-color);
+            border-radius: 0 0 5px 5px;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .parameters {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-bottom: 15px;
+            padding: 12px;
+            background-color: var(--header-bg);
+            border-radius: 5px;
+        }
+        
+        .parameter {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .parameter label {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--primary-color);
+            font-size: 0.9rem;
+        }
+        
+        .parameter input {
+            padding: 8px 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .parameter input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(211, 47, 47, 0.2);
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .results {
+            margin-top: 15px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+            min-width: 800px;
+        }
+        
+        th, td {
+            padding: 10px 12px;
+            text-align: left;
+            border: 1px solid var(--border-color);
+            font-size: 0.9rem;
+        }
+        
+        th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+        }
+        
+        tr:nth-child(even) {
+            background-color: var(--header-bg);
+        }
+        
+        .highlight {
+            background-color: #ffebee !important;
+            font-weight: 600;
+        }
+        
+        .section-title {
+            background-color: #e0e0e0 !important;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+        
+        .total-row {
+            background-color: #ffcdd2 !important;
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+        
+        .editable {
+            background-color: #fff8e1;
+            width: 100%;
+            padding: 5px;
+            border: 1px solid #ffd54f;
+            border-radius: 3px;
+            font-size: 0.9rem;
+        }
+        
+        .editable:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(211, 47, 47, 0.2);
+        }
+        
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            margin-top: 15px;
+        }
+        
+        .summary-card {
+            background-color: var(--header-bg);
+            padding: 12px;
+            border-radius: 5px;
+            text-align: center;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .summary-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .summary-card .value {
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+        
+        .btn-calculate {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 15px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 100%;
+            max-width: 300px;
+        }
+        
+        .btn-calculate:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .percentage-input {
+            position: relative;
+        }
+        
+        .percentage-input::after {
+            content: "%";
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+            pointer-events: none;
+        }
+        
+        .percentage-input input {
+            padding-right: 25px;
+        }
+        
+        /* Estilos para valores positivos y negativos */
+        .positive-value {
+            font-weight: 700;
+        }
+        
+        .negative-value {
+            color: var(--negative-color);
+            font-weight: 600;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .description {
+                font-size: 0.9rem;
+            }
+            
+            .parameters {
+                grid-template-columns: 1fr;
+            }
+            
+            th, td {
+                padding: 8px 10px;
+                font-size: 0.85rem;
+            }
+            
+            .summary {
+                grid-template-columns: 1fr;
+            }
+            
+            .summary-card .value {
+                font-size: 1.2rem;
+            }
+            
+            .btn-calculate {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .tab {
+                padding: 8px 15px;
+                font-size: 0.9rem;
+            }
+            
+            .tab-content {
+                padding: 10px;
+            }
+            
+            th, td {
+                padding: 6px 8px;
+                font-size: 0.8rem;
+            }
+            
+            .editable {
+                padding: 4px;
+                font-size: 0.8rem;
+            }
+        }
+        
+        /* Scrollbar styling for better mobile experience */
+        .tabs::-webkit-scrollbar, .results::-webkit-scrollbar {
+            height: 6px;
+        }
+        
+        .tabs::-webkit-scrollbar-track, .results::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+        
+        .tabs::-webkit-scrollbar-thumb, .results::-webkit-scrollbar-thumb {
+            background: var(--primary-light);
+            border-radius: 3px;
+        }
+        
+        .tabs::-webkit-scrollbar-thumb:hover, .results::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Calculadora de Comisiones de Ventas</h1>
+            <p class="description">Calcula las comisiones de ventas para diferentes canales: Mayoreo, Subdistribución y Menudeo.</p>
+        </header>
+        
+        <div class="tabs">
+            <div class="tab active" data-tab="mayoreo">Mayoreo</div>
+            <div class="tab" data-tab="subdistribucion">Subdistribución</div>
+            <div class="tab" data-tab="menudeo">Menudeo</div>
+        </div>
+        
+        <!-- Mayoreo Tab -->
+        <div id="mayoreo" class="tab-content active">
+            <div class="parameters">
+                <div class="parameter percentage-input">
+                    <label for="mayoreo-factor">% Factor:"Comisión"</label>
+                    <input type="number" id="mayoreo-factor" step="0.1" value="0">
+                </div>
+                <div class="parameter">
+                    <label for="mayoreo-meta">Meta Mensual:</label>
+                    <input type="number" id="mayoreo-meta" value="1000000">
+                </div>
+                <div class="parameter">
+                    <label for="mayoreo-ventas">Ventas Mes Sin Filial:</label>
+                    <input type="number" id="mayoreo-ventas" value="0">
+                </div>
+                <div class="parameter hidden">
+                    <label for="mayoreo-meta-minima">Meta Mínima:</label>
+                    <input type="number" id="mayoreo-meta-minima" value="1000000">
+                </div>
+            </div>
+            
+            <div class="results">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>CONCEPTO</th>
+                            <th>MRG ESPER</th>
+                            <th>IMPORTE</th>
+                            <th>MARGEN REAL</th>
+                            <th>UTILIDAD</th>
+                            <th>% FACTOR</th>
+                            <th>$ IMPORTE</th>
+                            <th>COMISIÓN GANADA</th>
+                        </tr>
+                    </thead>
+                    <tbody id="mayoreo-table-body">
+                        <!-- Los datos se llenarán con JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="summary">
+                <div class="summary-card">
+                    <h3>% Avance</h3>
+                    <div class="value" id="mayoreo-avance">0%</div>
+                </div>
+                <div class="summary-card">
+                    <h3>Alcance</h3>
+                    <div class="value" id="mayoreo-alcance">0</div>
+                </div>
+                <div class="summary-card">
+                    <h3>Total Comisión</h3>
+                    <div class="value" id="mayoreo-total">$0.00</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Subdistribución Tab -->
+        <div id="subdistribucion" class="tab-content">
+            <div class="parameters">
+                <div class="parameter percentage-input">
+                    <label for="subdistribucion-factor">% Factor "Comisión":</label>
+                    <input type="number" id="subdistribucion-factor" step="0.1" value="0">
+                </div>
+                <div class="parameter">
+                    <label for="subdistribucion-meta">Meta Mensual:</label>
+                    <input type="number" id="subdistribucion-meta" value="900000">
+                </div>
+                <div class="parameter">
+                    <label for="subdistribucion-ventas">Ventas Mes Sin Filial:</label>
+                    <input type="number" id="subdistribucion-ventas" value="0">
+                </div>
+                <div class="parameter">
+                    <label for="subdistribucion-meta-minima">Meta Mínima:</label>
+                    <input type="number" id="subdistribucion-meta-minima" value="600000">
+                </div>
+            </div>
+            
+            <div class="results">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>CONCEPTO</th>
+                            <th>MRG ESPER</th>
+                            <th>IMPORTE</th>
+                            <th>MARGEN REAL</th>
+                            <th>UTILIDAD</th>
+                            <th>% FACTOR</th>
+                            <th>$ IMPORTE</th>
+                            <th>COMISIÓN GANADA</th>
+                        </tr>
+                    </thead>
+                    <tbody id="subdistribucion-table-body">
+                        <!-- Los datos se llenarán con JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="summary">
+                <div class="summary-card">
+                    <h3>% Avance</h3>
+                    <div class="value" id="subdistribucion-avance">0%</div>
+                </div>
+                <div class="summary-card">
+                    <h3>Alcance</h3>
+                    <div class="value" id="subdistribucion-alcance">0</div>
+                </div>
+                <div class="summary-card">
+                    <h3>Total Comisión</h3>
+                    <div class="value" id="subdistribucion-total">$0.00</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Menudeo Tab -->
+        <div id="menudeo" class="tab-content">
+            <div class="parameters">
+                <div class="parameter percentage-input">
+                    <label for="menudeo-factor">% Factor:"Comisión"</label>
+                    <input type="number" id="menudeo-factor" step="0.1" value="0">
+                </div>
+                <div class="parameter">
+                    <label for="menudeo-meta">Meta Mensual:</label>
+                    <input type="number" id="menudeo-meta" value="1000000">
+                </div>
+                <div class="parameter">
+                    <label for="menudeo-ventas">Ventas Mes Sin Filial:</label>
+                    <input type="number" id="menudeo-ventas" value="0">
+                </div>
+            </div>
+            
+            <div class="results">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>CONCEPTO</th>
+                            <th>MRG ESPER</th>
+                            <th>IMPORTE</th>
+                            <th>MARGEN REAL</th>
+                            <th>UTILIDAD</th>
+                            <th>% FACTOR</th>
+                            <th>$ IMPORTE</th>
+                            <th>COMISIÓN GANADA</th>
+                        </tr>
+                    </thead>
+                    <tbody id="menudeo-table-body">
+                        <!-- Los datos se llenarán con JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="summary">
+                <div class="summary-card">
+                    <h3>% Avance</h3>
+                    <div class="value" id="menudeo-avance">0%</div>
+                </div>
+                <div class="summary-card">
+                    <h3>Alcance</h3>
+                    <div class="value" id="menudeo-alcance">0</div>
+                </div>
+                <div class="summary-card">
+                    <h3>Total Comisión</h3>
+                    <div class="value" id="menudeo-total">$0.00</div>
+                </div>
+            </div>
+        </div>
+        
+        <button class="btn-calculate" id="calculate-btn">Calcular Comisiones</button>
+    </div>
+
+    <script>
+        // Datos iniciales basados en el Excel
+        const initialData = {
+            mayoreo: [
+                { concepto: "CONTADO", mrgEsper: 0.19, importe: 0, margenReal: 0 },
+                { concepto: "CREDITO 1 A 37 (100%)", mrgEsper: 0.19, importe: 0, margenReal: 0 },
+                { concepto: "CREDITO 38 A 60 (50%)", mrgEsper: 0.19, importe: 0, margenReal: 0 },
+                { concepto: "CREDITO 61 O MAS (0%)", mrgEsper: 0.19, importe: 0, margenReal: 0 },
+                { concepto: "CORRESPONSABILIDAD", mrgEsper: 0.19, importe: 0, margenReal: 0 },
+                { concepto: "GDI", mrgEsper: 0, importe: 0, margenReal: 0, esTitulo: true },
+                { concepto: "CONTADO", mrgEsper: 0.17, importe: 0, margenReal: 0 },
+                { concepto: "CREDITO 1 A 37 (100%)", mrgEsper: 0.17, importe: 0, margenReal: 0 },
+                { concepto: "CREDITO 38 A 60 (50%)", mrgEsper: 0.17, importe: 0, margenReal: 0 },
+                { concepto: "CREDITO 61 O MAS (0%)", mrgEsper: 0.17, importe: 0, margenReal: 0 },
+                { concepto: "", mrgEsper: 0, importe: 0, margenReal: 0, esTitulo: true },
+                { concepto: "URBANIZACION", mrgEsper: 0, importe: 0, margenReal: 0, esTitulo: true },
+                { concepto: "CONTADO", mrgEsper: 0.12, importe: 0, margenReal: 0 },
+                { concepto: "CREDITO 1 A 37 (100%)", mrgEsper: 0.12, importe: 0, margenReal: 0 },
+                { concepto: "CREDITO 38 A 60 (50%)", mrgEsper: 0.12, importe: 0, margenReal: 0 },
+                { concepto: "CREDITO 61 O MAS (0%)", mrgEsper: 0.12, importe: 0, margenReal: 0 },
+                { concepto: "CORRESPONSABILIDAD", mrgEsper: 0.12, importe: 0, margenReal: 0 }
+            ],
+            subdistribucion: [
+                { concepto: "CONTADO", mrgEsper: 0.19, importe: 0, margenReal: 0 },
+                { concepto: "CREDITO 1 A 37 (100%)", mrgEsper: 0.19, importe: 0, margenReal: 0 },
+                { concepto: "CREDITO 38 A 60 (50%)", mrgEsper: 0.19, importe: 0, margenReal: 0 },
+                { concepto: "CREDITO 61 O MAS (0%)", mrgEsper: 0.19, importe: 0, margenReal: 0 },
+                { concepto: "CORRESPONSABILIDAD", mrgEsper: 0.19, importe: 0, margenReal: 0 }
+            ],
+            menudeo: [
+                { concepto: "CONTADO", mrgEsper: 0.27, importe: 0, margenReal: 0 },
+                { concepto: "CREDITO 1 A 37 (100%)", mrgEsper: 0.27, importe: 0, margenReal: 0 },
+                { concepto: "CREDITO 38 A 60 (50%)", mrgEsper: 0.27, importe: 0, margenReal: 0 },
+                { concepto: "CREDITO 61 O MAS (0%)", mrgEsper: 0.27, importe: 0, margenReal: 0 },
+                { concepto: "CORRESPONSABILIDAD", mrgEsper: 0.27, importe: 0, margenReal: 0 }
+            ]
+        };
+
+        // Funciones de cálculo
+        function calcularUtilidad(importe, margenReal) {
+            return importe * margenReal;
+        }
+
+        function calcularPorcentajeFactor(margenReal, mrgEsper, factor) {
+            if (mrgEsper === 0) return 0;
+            return (margenReal / mrgEsper) * (factor / 100);
+        }
+
+        function calcularImporte(porcentajeFactor, utilidad, concepto) {
+            if (concepto.includes("CREDITO 38 A 60")) {
+                return (porcentajeFactor * utilidad) / 2;
+            } else if (concepto.includes("CREDITO 61 O MAS")) {
+                return (porcentajeFactor * utilidad) * 0;
+            } else if (concepto.includes("CORRESPONSABILIDAD")) {
+                return -(porcentajeFactor * utilidad) / 2;
+            } else {
+                return porcentajeFactor * utilidad;
+            }
+        }
+
+        function calcularComision(importeCalculado, alcance) {
+            return alcance >= 1 ? importeCalculado : alcance * importeCalculado;
+        }
+
+        // Función para formatear valores con estilos
+        function formatearValor(valor, esPorcentaje = false) {
+            const span = document.createElement('span');
+            let valorFormateado = valor;
+            
+            if (esPorcentaje) {
+                valorFormateado = (valor * 100).toFixed(2) + '%';
+            }
+            
+            span.textContent = valorFormateado;
+            
+            if (valor < 0) {
+                span.classList.add('negative-value');
+            } else if (valor > 0) {
+                span.classList.add('positive-value');
+            }
+            
+            return span;
+        }
+
+        // Función para crear campos editables en las tablas
+        function crearCampoEditable(valor, tipo, dataIndex, campo, concepto = "") {
+            const input = document.createElement('input');
+            input.type = tipo;
+            input.value = valor;
+            input.classList.add('editable');
+            input.dataset.index = dataIndex;
+            input.dataset.campo = campo;
+            input.dataset.concepto = concepto;
+            
+            input.addEventListener('change', function() {
+                const index = parseInt(this.dataset.index);
+                const campo = this.dataset.campo;
+                const concepto = this.dataset.concepto;
+                const valor = parseFloat(this.value) || 0;
+                
+                // Actualizar los datos
+                if (concepto === "mayoreo") {
+                    initialData.mayoreo[index][campo] = valor;
+                } else if (concepto === "subdistribucion") {
+                    initialData.subdistribucion[index][campo] = valor;
+                } else if (concepto === "menudeo") {
+                    initialData.menudeo[index][campo] = valor;
+                }
+                
+                // Recalcular
+                calcularComisiones();
+            });
+            
+            return input;
+        }
+
+        // Función para calcular y mostrar resultados
+        function calcularComisiones() {
+            // Mayoreo
+            const factorMayoreo = parseFloat(document.getElementById('mayoreo-factor').value);
+            const metaMayoreo = parseFloat(document.getElementById('mayoreo-meta').value);
+            const ventasMayoreo = parseFloat(document.getElementById('mayoreo-ventas').value);
+            const metaMinimaMayoreo = parseFloat(document.getElementById('mayoreo-meta-minima').value);
+            
+            const avanceMayoreo = ventasMayoreo > metaMayoreo ? 1 : ventasMayoreo / metaMayoreo;
+            const alcanceMayoreo = metaMayoreo / metaMinimaMayoreo;
+            
+            document.getElementById('mayoreo-avance').textContent = (avanceMayoreo * 100).toFixed(2) + '%';
+            document.getElementById('mayoreo-alcance').textContent = alcanceMayoreo.toFixed(2);
+            
+            let totalImporteMayoreo = 0;
+            let totalComisionMayoreo = 0;
+            const tablaMayoreo = document.getElementById('mayoreo-table-body');
+            tablaMayoreo.innerHTML = '';
+            
+            initialData.mayoreo.forEach((item, index) => {
+                // Si es un título divisorio, mostrar solo el concepto
+                if (item.esTitulo) {
+                    const fila = document.createElement('tr');
+                    fila.classList.add('section-title');
+                    
+                    const celdaConcepto = document.createElement('td');
+                    celdaConcepto.textContent = item.concepto;
+                    celdaConcepto.colSpan = 8; // Ocupa todas las columnas
+                    celdaConcepto.style.textAlign = 'center';
+                    celdaConcepto.style.fontWeight = 'bold';
+                    
+                    fila.appendChild(celdaConcepto);
+                    tablaMayoreo.appendChild(fila);
+                    return; // Saltar al siguiente item
+                }
+                
+                const utilidad = calcularUtilidad(item.importe, item.margenReal);
+                const porcentajeFactor = calcularPorcentajeFactor(item.margenReal, item.mrgEsper, factorMayoreo);
+                const importeCalculado = calcularImporte(porcentajeFactor, utilidad, item.concepto);
+                const comision = calcularComision(importeCalculado, alcanceMayoreo);
+                
+                totalImporteMayoreo += importeCalculado;
+                totalComisionMayoreo += comision;
+                
+                const fila = document.createElement('tr');
+                
+                // Crear celdas con campos editables donde corresponda
+                const celdaConcepto = document.createElement('td');
+                celdaConcepto.textContent = item.concepto;
+                
+                const celdaMrgEsper = document.createElement('td');
+                celdaMrgEsper.appendChild(formatearValor(item.mrgEsper, true));
+                
+                const celdaImporte = document.createElement('td');
+                celdaImporte.appendChild(crearCampoEditable(item.importe, 'number', index, 'importe', 'mayoreo'));
+                
+                const celdaMargenReal = document.createElement('td');
+                celdaMargenReal.appendChild(crearCampoEditable(item.margenReal, 'number', index, 'margenReal', 'mayoreo'));
+                
+                const celdaUtilidad = document.createElement('td');
+                celdaUtilidad.textContent = utilidad.toLocaleString('es-MX', { minimumFractionDigits: 2 });
+                
+                const celdaPorcentajeFactor = document.createElement('td');
+                celdaPorcentajeFactor.textContent = (porcentajeFactor * 100).toFixed(6) + '%';
+                
+                const celdaImporteCalculado = document.createElement('td');
+                celdaImporteCalculado.textContent = importeCalculado.toLocaleString('es-MX', { minimumFractionDigits: 2 });
+                
+                const celdaComision = document.createElement('td');
+                celdaComision.textContent = comision.toLocaleString('es-MX', { minimumFractionDigits: 2 });
+                
+                fila.appendChild(celdaConcepto);
+                fila.appendChild(celdaMrgEsper);
+                fila.appendChild(celdaImporte);
+                fila.appendChild(celdaMargenReal);
+                fila.appendChild(celdaUtilidad);
+                fila.appendChild(celdaPorcentajeFactor);
+                fila.appendChild(celdaImporteCalculado);
+                fila.appendChild(celdaComision);
+                
+                tablaMayoreo.appendChild(fila);
+            });
+            
+            // Agregar fila de total
+            const filaTotalMayoreo = document.createElement('tr');
+            filaTotalMayoreo.classList.add('total-row');
+            filaTotalMayoreo.innerHTML = `
+                <td colspan="6">TOTAL:</td>
+                <td>${totalImporteMayoreo.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</td>
+                <td>${totalComisionMayoreo.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</td>
+            `;
+            tablaMayoreo.appendChild(filaTotalMayoreo);
+            
+            document.getElementById('mayoreo-total').textContent = '$' + totalComisionMayoreo.toLocaleString('es-MX', { minimumFractionDigits: 2 });
+            
+            // Subdistribución
+            const factorSubdistribucion = parseFloat(document.getElementById('subdistribucion-factor').value);
+            const metaSubdistribucion = parseFloat(document.getElementById('subdistribucion-meta').value);
+            const ventasSubdistribucion = parseFloat(document.getElementById('subdistribucion-ventas').value);
+            const metaMinimaSubdistribucion = parseFloat(document.getElementById('subdistribucion-meta-minima').value);
+            
+            const avanceSubdistribucion = ventasSubdistribucion > metaSubdistribucion ? 1 : ventasSubdistribucion / metaSubdistribucion;
+            const alcanceSubdistribucion = metaSubdistribucion / metaMinimaSubdistribucion;
+            
+            document.getElementById('subdistribucion-avance').textContent = (avanceSubdistribucion * 100).toFixed(2) + '%';
+            document.getElementById('subdistribucion-alcance').textContent = alcanceSubdistribucion.toFixed(2);
+            
+            let totalImporteSubdistribucion = 0;
+            let totalComisionSubdistribucion = 0;
+            const tablaSubdistribucion = document.getElementById('subdistribucion-table-body');
+            tablaSubdistribucion.innerHTML = '';
+            
+            initialData.subdistribucion.forEach((item, index) => {
+                const utilidad = calcularUtilidad(item.importe, item.margenReal);
+                const porcentajeFactor = calcularPorcentajeFactor(item.margenReal, item.mrgEsper, factorSubdistribucion);
+                const importeCalculado = calcularImporte(porcentajeFactor, utilidad, item.concepto);
+                const comision = calcularComision(importeCalculado, alcanceSubdistribucion);
+                
+                totalImporteSubdistribucion += importeCalculado;
+                totalComisionSubdistribucion += comision;
+                
+                const fila = document.createElement('tr');
+                
+                // Crear celdas con campos editables donde corresponda
+                const celdaConcepto = document.createElement('td');
+                celdaConcepto.textContent = item.concepto;
+                
+                const celdaMrgEsper = document.createElement('td');
+                celdaMrgEsper.appendChild(formatearValor(item.mrgEsper, true));
+                
+                const celdaImporte = document.createElement('td');
+                celdaImporte.appendChild(crearCampoEditable(item.importe, 'number', index, 'importe', 'subdistribucion'));
+                
+                const celdaMargenReal = document.createElement('td');
+                celdaMargenReal.appendChild(crearCampoEditable(item.margenReal, 'number', index, 'margenReal', 'subdistribucion'));
+                
+                const celdaUtilidad = document.createElement('td');
+                celdaUtilidad.textContent = utilidad.toLocaleString('es-MX', { minimumFractionDigits: 2 });
+                
+                const celdaPorcentajeFactor = document.createElement('td');
+                celdaPorcentajeFactor.textContent = (porcentajeFactor * 100).toFixed(6) + '%';
+                
+                const celdaImporteCalculado = document.createElement('td');
+                celdaImporteCalculado.textContent = importeCalculado.toLocaleString('es-MX', { minimumFractionDigits: 2 });
+                
+                const celdaComision = document.createElement('td');
+                celdaComision.textContent = comision.toLocaleString('es-MX', { minimumFractionDigits: 2 });
+                
+                fila.appendChild(celdaConcepto);
+                fila.appendChild(celdaMrgEsper);
+                fila.appendChild(celdaImporte);
+                fila.appendChild(celdaMargenReal);
+                fila.appendChild(celdaUtilidad);
+                fila.appendChild(celdaPorcentajeFactor);
+                fila.appendChild(celdaImporteCalculado);
+                fila.appendChild(celdaComision);
+                
+                tablaSubdistribucion.appendChild(fila);
+            });
+            
+            // Agregar fila de total
+            const filaTotalSubdistribucion = document.createElement('tr');
+            filaTotalSubdistribucion.classList.add('total-row');
+            filaTotalSubdistribucion.innerHTML = `
+                <td colspan="6">TOTAL:</td>
+                <td>${totalImporteSubdistribucion.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</td>
+                <td>${totalComisionSubdistribucion.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</td>
+            `;
+            tablaSubdistribucion.appendChild(filaTotalSubdistribucion);
+            
+            document.getElementById('subdistribucion-total').textContent = '$' + totalComisionSubdistribucion.toLocaleString('es-MX', { minimumFractionDigits: 2 });
+            
+            // Menudeo
+            const factorMenudeo = parseFloat(document.getElementById('menudeo-factor').value);
+            const metaMenudeo = parseFloat(document.getElementById('menudeo-meta').value);
+            const ventasMenudeo = parseFloat(document.getElementById('menudeo-ventas').value);
+            
+            const avanceMenudeo = ventasMenudeo > metaMenudeo ? 1 : ventasMenudeo / metaMenudeo;
+            const alcanceMenudeo = ventasMenudeo / metaMenudeo;
+            
+            document.getElementById('menudeo-avance').textContent = (avanceMenudeo * 100).toFixed(2) + '%';
+            document.getElementById('menudeo-alcance').textContent = alcanceMenudeo.toFixed(2);
+            
+            let totalImporteMenudeo = 0;
+            let totalComisionMenudeo = 0;
+            const tablaMenudeo = document.getElementById('menudeo-table-body');
+            tablaMenudeo.innerHTML = '';
+            
+            initialData.menudeo.forEach((item, index) => {
+                const utilidad = calcularUtilidad(item.importe, item.margenReal);
+                const porcentajeFactor = calcularPorcentajeFactor(item.margenReal, item.mrgEsper, factorMenudeo);
+                const importeCalculado = calcularImporte(porcentajeFactor, utilidad, item.concepto);
+                const comision = calcularComision(importeCalculado, alcanceMenudeo);
+                
+                totalImporteMenudeo += importeCalculado;
+                totalComisionMenudeo += comision;
+                
+                const fila = document.createElement('tr');
+                
+                // Crear celdas con campos editables donde corresponda
+                const celdaConcepto = document.createElement('td');
+                celdaConcepto.textContent = item.concepto;
+                
+                const celdaMrgEsper = document.createElement('td');
+                celdaMrgEsper.appendChild(formatearValor(item.mrgEsper, true));
+                
+                const celdaImporte = document.createElement('td');
+                celdaImporte.appendChild(crearCampoEditable(item.importe, 'number', index, 'importe', 'menudeo'));
+                
+                const celdaMargenReal = document.createElement('td');
+                celdaMargenReal.appendChild(crearCampoEditable(item.margenReal, 'number', index, 'margenReal', 'menudeo'));
+                
+                const celdaUtilidad = document.createElement('td');
+                celdaUtilidad.textContent = utilidad.toLocaleString('es-MX', { minimumFractionDigits: 2 });
+                
+                const celdaPorcentajeFactor = document.createElement('td');
+                celdaPorcentajeFactor.textContent = (porcentajeFactor * 100).toFixed(6) + '%';
+                
+                const celdaImporteCalculado = document.createElement('td');
+                celdaImporteCalculado.textContent = importeCalculado.toLocaleString('es-MX', { minimumFractionDigits: 2 });
+                
+                const celdaComision = document.createElement('td');
+                celdaComision.textContent = comision.toLocaleString('es-MX', { minimumFractionDigits: 2 });
+                
+                fila.appendChild(celdaConcepto);
+                fila.appendChild(celdaMrgEsper);
+                fila.appendChild(celdaImporte);
+                fila.appendChild(celdaMargenReal);
+                fila.appendChild(celdaUtilidad);
+                fila.appendChild(celdaPorcentajeFactor);
+                fila.appendChild(celdaImporteCalculado);
+                fila.appendChild(celdaComision);
+                
+                tablaMenudeo.appendChild(fila);
+            });
+            
+            // Agregar fila de total
+            const filaTotalMenudeo = document.createElement('tr');
+            filaTotalMenudeo.classList.add('total-row');
+            filaTotalMenudeo.innerHTML = `
+                <td colspan="6">TOTAL:</td>
+                <td>${totalImporteMenudeo.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</td>
+                <td>${totalComisionMenudeo.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</td>
+            `;
+            tablaMenudeo.appendChild(filaTotalMenudeo);
+            
+            document.getElementById('menudeo-total').textContent = '$' + totalComisionMenudeo.toLocaleString('es-MX', { minimumFractionDigits: 2 });
+        }
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            // Configurar tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // Remover clase active de todos los tabs y contenidos
+                    tabs.forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    
+                    // Agregar clase active al tab y contenido seleccionado
+                    this.classList.add('active');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // Configurar botón de calcular
+            document.getElementById('calculate-btn').addEventListener('click', calcularComisiones);
+            
+            // Calcular inicialmente
+            calcularComisiones();
+        });
+    </script>
+</body>
+</html>
+
+<p>&copy; FRANCISCO JAVIER CEREZO RAMOS 08.10.2025</p>
