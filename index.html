@@ -28,44 +28,45 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             line-height: 1.6;
+            padding: 5px;
         }
         
         .container {
-            max-width: 1200px;
+            max-width: 100%;
             margin: 0 auto;
-            padding: 15px;
+            padding: 5px;
         }
         
         header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             border-bottom: 2px solid var(--primary-color);
-            padding-bottom: 15px;
+            padding-bottom: 10px;
         }
         
         h1 {
             color: var(--primary-color);
-            font-size: 1.8rem;
-            margin-bottom: 10px;
+            font-size: 1.5rem;
+            margin-bottom: 5px;
         }
         
         .description {
             color: var(--text-color);
-            font-size: 1rem;
+            font-size: 0.9rem;
             max-width: 800px;
             margin: 0 auto;
         }
         
         .tabs {
             display: flex;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             border-bottom: 1px solid var(--border-color);
             overflow-x: auto;
             white-space: nowrap;
         }
         
         .tab {
-            padding: 10px 20px;
+            padding: 8px 15px;
             background-color: var(--header-bg);
             border: 1px solid var(--border-color);
             border-bottom: none;
@@ -73,8 +74,9 @@
             font-weight: 600;
             transition: all 0.3s ease;
             border-radius: 5px 5px 0 0;
-            margin-right: 5px;
+            margin-right: 3px;
             flex-shrink: 0;
+            font-size: 0.9rem;
         }
         
         .tab.active {
@@ -90,7 +92,7 @@
         
         .tab-content {
             display: none;
-            padding: 15px;
+            padding: 10px;
             border: 1px solid var(--border-color);
             border-top: none;
             background-color: var(--bg-color);
@@ -103,10 +105,10 @@
         
         .parameters {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 12px;
-            margin-bottom: 15px;
-            padding: 12px;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 8px;
+            margin-bottom: 10px;
+            padding: 10px;
             background-color: var(--header-bg);
             border-radius: 5px;
         }
@@ -118,16 +120,16 @@
         
         .parameter label {
             font-weight: 600;
-            margin-bottom: 5px;
+            margin-bottom: 3px;
             color: var(--primary-color);
-            font-size: 0.9rem;
+            font-size: 0.8rem;
         }
         
         .parameter input {
-            padding: 8px 10px;
+            padding: 6px 8px;
             border: 1px solid var(--border-color);
             border-radius: 4px;
-            font-size: 1rem;
+            font-size: 0.9rem;
         }
         
         .parameter input:focus {
@@ -141,23 +143,27 @@
         }
         
         .results {
-            margin-top: 15px;
+            margin-top: 10px;
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
+            font-size: 0.8rem;
         }
         
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 15px;
-            min-width: 800px;
+            margin-bottom: 10px;
+            table-layout: fixed;
         }
         
         th, td {
-            padding: 10px 12px;
+            padding: 6px 4px;
             text-align: left;
             border: 1px solid var(--border-color);
-            font-size: 0.9rem;
+            font-size: 0.75rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
         
         th {
@@ -166,6 +172,7 @@
             font-weight: 600;
             position: sticky;
             top: 0;
+            font-size: 0.7rem;
         }
         
         tr:nth-child(even) {
@@ -180,7 +187,6 @@
         .section-title {
             background-color: #e0e0e0 !important;
             font-weight: 700;
-            font-size: 1rem;
         }
         
         .total-row {
@@ -192,10 +198,10 @@
         .editable {
             background-color: #fff8e1;
             width: 100%;
-            padding: 5px;
+            padding: 3px;
             border: 1px solid #ffd54f;
             border-radius: 3px;
-            font-size: 0.9rem;
+            font-size: 0.75rem;
         }
         
         .editable:focus {
@@ -206,14 +212,14 @@
         
         .summary {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 12px;
-            margin-top: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 8px;
+            margin-top: 10px;
         }
         
         .summary-card {
             background-color: var(--header-bg);
-            padding: 12px;
+            padding: 8px;
             border-radius: 5px;
             text-align: center;
             border-left: 4px solid var(--primary-color);
@@ -221,12 +227,12 @@
         
         .summary-card h3 {
             color: var(--primary-color);
-            margin-bottom: 8px;
-            font-size: 0.9rem;
+            margin-bottom: 5px;
+            font-size: 0.8rem;
         }
         
         .summary-card .value {
-            font-size: 1.3rem;
+            font-size: 1rem;
             font-weight: 700;
         }
         
@@ -234,18 +240,18 @@
             background-color: var(--primary-color);
             color: white;
             border: none;
-            padding: 12px 24px;
-            font-size: 1rem;
+            padding: 10px 20px;
+            font-size: 0.9rem;
             font-weight: 600;
             border-radius: 4px;
             cursor: pointer;
             transition: background-color 0.3s;
-            margin-top: 15px;
+            margin-top: 10px;
             display: block;
             margin-left: auto;
             margin-right: auto;
             width: 100%;
-            max-width: 300px;
+            max-width: 250px;
         }
         
         .btn-calculate:hover {
@@ -259,7 +265,7 @@
         .percentage-input::after {
             content: "%";
             position: absolute;
-            right: 10px;
+            right: 8px;
             top: 50%;
             transform: translateY(-50%);
             color: #666;
@@ -267,7 +273,7 @@
         }
         
         .percentage-input input {
-            padding-right: 25px;
+            padding-right: 20px;
         }
         
         /* Estilos para valores positivos y negativos */
@@ -280,77 +286,88 @@
             font-weight: 600;
         }
         
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            .container {
-                padding: 10px;
-            }
-            
-            h1 {
-                font-size: 1.5rem;
-            }
-            
-            .description {
-                font-size: 0.9rem;
-            }
-            
-            .parameters {
-                grid-template-columns: 1fr;
-            }
-            
-            th, td {
-                padding: 8px 10px;
-                font-size: 0.85rem;
-            }
-            
-            .summary {
-                grid-template-columns: 1fr;
-            }
-            
-            .summary-card .value {
-                font-size: 1.2rem;
-            }
-            
-            .btn-calculate {
-                padding: 10px 20px;
-                font-size: 0.9rem;
-            }
+        /* Anchos específicos para columnas de la tabla */
+        .results th:nth-child(1),
+        .results td:nth-child(1) { width: 18%; min-width: 100px; } /* CONCEPTO */
+        
+        .results th:nth-child(2),
+        .results td:nth-child(2) { width: 8%; min-width: 70px; } /* MRG ESPER */
+        
+        .results th:nth-child(3),
+        .results td:nth-child(3) { width: 10%; min-width: 80px; } /* IMPORTE */
+        
+        .results th:nth-child(4),
+        .results td:nth-child(4) { width: 10%; min-width: 80px; } /* MARGEN REAL */
+        
+        .results th:nth-child(5),
+        .results td:nth-child(5) { width: 10%; min-width: 80px; } /* UTILIDAD */
+        
+        .results th:nth-child(6),
+        .results td:nth-child(6) { width: 12%; min-width: 90px; } /* % FACTOR */
+        
+        .results th:nth-child(7),
+        .results td:nth-child(7) { width: 12%; min-width: 90px; } /* $ IMPORTE */
+        
+        .results th:nth-child(8),
+        .results td:nth-child(8) { width: 20%; min-width: 110px; } /* COMISIÓN GANADA */
+
+        /* Para la fila de título que ocupa todas las columnas */
+        .section-title td {
+            text-align: center !important;
+            font-weight: bold !important;
+            background-color: #e0e0e0 !important;
+            padding: 8px !important;
         }
         
-        @media (max-width: 480px) {
-            .tab {
-                padding: 8px 15px;
-                font-size: 0.9rem;
-            }
-            
-            .tab-content {
-                padding: 10px;
-            }
-            
-            th, td {
-                padding: 6px 8px;
-                font-size: 0.8rem;
-            }
-            
-            .editable {
-                padding: 4px;
-                font-size: 0.8rem;
-            }
+        /* Nuevos estilos para ocultar alcance */
+        .alcance-hidden {
+            display: none;
         }
         
-        /* Scrollbar styling for better mobile experience */
+        /* Estilo para mantener el espacio cuando se oculta el 12% */
+       // .urbanizacion-hidden {
+        //    visibility: hidden;
+        }
+        
+        /* Estilo para campos con símbolo % */
+        .percent-container {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+        
+        .percent-container input {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .percent-container .percent-symbol {
+            color: #666;
+            min-width: 12px;
+            font-size: 0.7rem;
+        }
+        
+        /* Ajustes para cabeceras de tabla */
+        .results th {
+            white-space: normal;
+            word-wrap: break-word;
+            line-height: 1.2;
+            padding: 4px 3px;
+        }
+        
+        /* Scrollbar styling */
         .tabs::-webkit-scrollbar, .results::-webkit-scrollbar {
-            height: 6px;
+            height: 4px;
         }
         
         .tabs::-webkit-scrollbar-track, .results::-webkit-scrollbar-track {
             background: #f1f1f1;
-            border-radius: 3px;
+            border-radius: 2px;
         }
         
         .tabs::-webkit-scrollbar-thumb, .results::-webkit-scrollbar-thumb {
             background: var(--primary-light);
-            border-radius: 3px;
+            border-radius: 2px;
         }
         
         .tabs::-webkit-scrollbar-thumb:hover, .results::-webkit-scrollbar-thumb:hover {
@@ -417,7 +434,7 @@
                     <h3>% Avance</h3>
                     <div class="value" id="mayoreo-avance">0%</div>
                 </div>
-                <div class="summary-card">
+                <div class="summary-card alcance-hidden">
                     <h3>Alcance</h3>
                     <div class="value" id="mayoreo-alcance">0</div>
                 </div>
@@ -437,7 +454,7 @@
                 </div>
                 <div class="parameter">
                     <label for="subdistribucion-meta">Meta Mensual:</label>
-                    <input type="number" id="subdistribucion-meta" value="900000">
+                    <input type="number" id="subdistribucion-meta" value="600000">
                 </div>
                 <div class="parameter">
                     <label for="subdistribucion-ventas">Ventas Mes Sin Filial:</label>
@@ -474,7 +491,7 @@
                     <h3>% Avance</h3>
                     <div class="value" id="subdistribucion-avance">0%</div>
                 </div>
-                <div class="summary-card">
+                <div class="summary-card alcance-hidden">
                     <h3>Alcance</h3>
                     <div class="value" id="subdistribucion-alcance">0</div>
                 </div>
@@ -527,7 +544,7 @@
                     <h3>% Avance</h3>
                     <div class="value" id="menudeo-avance">0%</div>
                 </div>
-                <div class="summary-card">
+                <div class="summary-card alcance-hidden">
                     <h3>Alcance</h3>
                     <div class="value" id="menudeo-alcance">0</div>
                 </div>
@@ -557,11 +574,11 @@
                 { concepto: "CREDITO 61 O MAS (0%)", mrgEsper: 17, importe: 0, margenReal: 0 },
                 { concepto: "", mrgEsper: 0, importe: 0, margenReal: 0, esTitulo: true },
                 { concepto: "URBANIZACION", mrgEsper: 0, importe: 0, margenReal: 0, esTitulo: true },
-                { concepto: "CONTADO", mrgEsper: 12, importe: 0, margenReal: 0 },
-                { concepto: "CREDITO 1 A 37 (100%)", mrgEsper: 12, importe: 0, margenReal: 0 },
-                { concepto: "CREDITO 38 A 60 (50%)", mrgEsper: 12, importe: 0, margenReal: 0 },
-                { concepto: "CREDITO 61 O MAS (0%)", mrgEsper: 12, importe: 0, margenReal: 0 },
-                { concepto: "CORRESPONSABILIDAD", mrgEsper: 12, importe: 0, margenReal: 0 }
+                { concepto: "CONTADO", mrgEsper: 12, importe: 0, margenReal: 0, esUrbanizacion: true },
+                { concepto: "CREDITO 1 A 37 (100%)", mrgEsper: 12, importe: 0, margenReal: 0, esUrbanizacion: true },
+                { concepto: "CREDITO 38 A 60 (50%)", mrgEsper: 12, importe: 0, margenReal: 0, esUrbanizacion: true },
+                { concepto: "CREDITO 61 O MAS (0%)", mrgEsper: 12, importe: 0, margenReal: 0, esUrbanizacion: true },
+                { concepto: "CORRESPONSABILIDAD", mrgEsper: 12, importe: 0, margenReal: 0, esUrbanizacion: true }
             ],
             subdistribucion: [
                 { concepto: "CONTADO", mrgEsper: 19, importe: 0, margenReal: 0 },
@@ -584,8 +601,12 @@
             return importe * (margenReal / 100);
         }
 
-        function calcularPorcentajeFactor(margenReal, mrgEsper, factor) {
+        function calcularPorcentajeFactor(margenReal, mrgEsper, factor, esUrbanizacion = false) {
             if (mrgEsper === 0) return 0;
+            // Para urbanización, el factor es el mismo que el factor de comisión
+            if (esUrbanizacion) {
+                return factor / 100;
+            }
             return (margenReal / mrgEsper) * (factor / 100);
         }
 
@@ -606,11 +627,13 @@
         }
 
         // Función para formatear valores con estilos
-        function formatearValor(valor, esPorcentaje = false, esPorcentajeDirecto = false) {
+        function formatearValor(valor, esPorcentaje = false, esPorcentajeDirecto = false, esMoneda = false) {
             const span = document.createElement('span');
             let valorFormateado = valor;
             
-            if (esPorcentaje) {
+            if (esMoneda) {
+                valorFormateado = '$' + valor.toLocaleString('es-MX', { minimumFractionDigits: 2 });
+            } else if (esPorcentaje) {
                 if (esPorcentajeDirecto) {
                     valorFormateado = valor.toFixed(2) + '%';
                 } else {
@@ -661,8 +684,11 @@
             return input;
         }
 
-        // Función para crear campos editables de porcentaje
-        function crearCampoEditablePorcentaje(valor, dataIndex, campo, concepto = "") {
+        // Función para crear campos editables con símbolo %
+        function crearCampoEditableConPorcentaje(valor, dataIndex, campo, concepto = "") {
+            const container = document.createElement('div');
+            container.classList.add('percent-container');
+            
             const input = document.createElement('input');
             input.type = 'number';
             input.step = '0.01';
@@ -691,7 +717,14 @@
                 calcularComisiones();
             });
             
-            return input;
+            const percentSymbol = document.createElement('span');
+            percentSymbol.textContent = '%';
+            percentSymbol.classList.add('percent-symbol');
+            
+            container.appendChild(input);
+            container.appendChild(percentSymbol);
+            
+            return container;
         }
 
         // Función para calcular y mostrar resultados
@@ -731,7 +764,7 @@
                 }
                 
                 const utilidad = calcularUtilidad(item.importe, item.margenReal);
-                const porcentajeFactor = calcularPorcentajeFactor(item.margenReal, item.mrgEsper, factorMayoreo);
+                const porcentajeFactor = calcularPorcentajeFactor(item.margenReal, item.mrgEsper, factorMayoreo, item.esUrbanizacion);
                 const importeCalculado = calcularImporte(porcentajeFactor, utilidad, item.concepto);
                 const comision = calcularComision(importeCalculado, alcanceMayoreo);
                 
@@ -745,25 +778,45 @@
                 celdaConcepto.textContent = item.concepto;
                 
                 const celdaMrgEsper = document.createElement('td');
-                celdaMrgEsper.appendChild(formatearValor(item.mrgEsper, false, true));
+                // Ocultar el valor 12 en urbanización pero mantener el espacio
+                if (item.esUrbanizacion && item.mrgEsper === 12) {
+                    celdaMrgEsper.classList.add('urbanizacion-hidden');
+                    // Crear un campo vacío para mantener el espacio
+                    const container = document.createElement('div');
+                    container.classList.add('percent-container');
+                    const input = document.createElement('input');
+                    input.type = 'number';
+                    input.value = '';
+                    input.classList.add('editable');
+                    input.style.visibility = 'hidden';
+                    const percentSymbol = document.createElement('span');
+                    percentSymbol.textContent = '%';
+                    percentSymbol.classList.add('percent-symbol');
+                    percentSymbol.style.visibility = 'hidden';
+                    container.appendChild(input);
+                    container.appendChild(percentSymbol);
+                    celdaMrgEsper.appendChild(container);
+                } else {
+                    celdaMrgEsper.appendChild(crearCampoEditableConPorcentaje(item.mrgEsper, index, 'mrgEsper', 'mayoreo'));
+                }
                 
                 const celdaImporte = document.createElement('td');
                 celdaImporte.appendChild(crearCampoEditable(item.importe, 'number', index, 'importe', 'mayoreo'));
                 
                 const celdaMargenReal = document.createElement('td');
-                celdaMargenReal.appendChild(crearCampoEditablePorcentaje(item.margenReal, index, 'margenReal', 'mayoreo'));
+                celdaMargenReal.appendChild(crearCampoEditableConPorcentaje(item.margenReal, index, 'margenReal', 'mayoreo'));
                 
                 const celdaUtilidad = document.createElement('td');
-                celdaUtilidad.textContent = utilidad.toLocaleString('es-MX', { minimumFractionDigits: 2 });
+                celdaUtilidad.appendChild(formatearValor(utilidad, false, false, true));
                 
                 const celdaPorcentajeFactor = document.createElement('td');
                 celdaPorcentajeFactor.textContent = (porcentajeFactor * 100).toFixed(6) + '%';
                 
                 const celdaImporteCalculado = document.createElement('td');
-                celdaImporteCalculado.textContent = importeCalculado.toLocaleString('es-MX', { minimumFractionDigits: 2 });
+                celdaImporteCalculado.appendChild(formatearValor(importeCalculado, false, false, true));
                 
                 const celdaComision = document.createElement('td');
-                celdaComision.textContent = comision.toLocaleString('es-MX', { minimumFractionDigits: 2 });
+                celdaComision.appendChild(formatearValor(comision, false, false, true));
                 
                 fila.appendChild(celdaConcepto);
                 fila.appendChild(celdaMrgEsper);
@@ -780,11 +833,21 @@
             // Agregar fila de total
             const filaTotalMayoreo = document.createElement('tr');
             filaTotalMayoreo.classList.add('total-row');
-            filaTotalMayoreo.innerHTML = `
-                <td colspan="6">TOTAL:</td>
-                <td>${totalImporteMayoreo.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</td>
-                <td>${totalComisionMayoreo.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</td>
-            `;
+            
+            const celdaTotalConcepto = document.createElement('td');
+            celdaTotalConcepto.colSpan = 6;
+            celdaTotalConcepto.textContent = 'TOTAL:';
+            
+            const celdaTotalImporte = document.createElement('td');
+            celdaTotalImporte.appendChild(formatearValor(totalImporteMayoreo, false, false, true));
+            
+            const celdaTotalComision = document.createElement('td');
+            celdaTotalComision.appendChild(formatearValor(totalComisionMayoreo, false, false, true));
+            
+            filaTotalMayoreo.appendChild(celdaTotalConcepto);
+            filaTotalMayoreo.appendChild(celdaTotalImporte);
+            filaTotalMayoreo.appendChild(celdaTotalComision);
+            
             tablaMayoreo.appendChild(filaTotalMayoreo);
             
             document.getElementById('mayoreo-total').textContent = '$' + totalComisionMayoreo.toLocaleString('es-MX', { minimumFractionDigits: 2 });
@@ -822,25 +885,25 @@
                 celdaConcepto.textContent = item.concepto;
                 
                 const celdaMrgEsper = document.createElement('td');
-                celdaMrgEsper.appendChild(formatearValor(item.mrgEsper, false, true));
+                celdaMrgEsper.appendChild(crearCampoEditableConPorcentaje(item.mrgEsper, index, 'mrgEsper', 'subdistribucion'));
                 
                 const celdaImporte = document.createElement('td');
                 celdaImporte.appendChild(crearCampoEditable(item.importe, 'number', index, 'importe', 'subdistribucion'));
                 
                 const celdaMargenReal = document.createElement('td');
-                celdaMargenReal.appendChild(crearCampoEditablePorcentaje(item.margenReal, index, 'margenReal', 'subdistribucion'));
+                celdaMargenReal.appendChild(crearCampoEditableConPorcentaje(item.margenReal, index, 'margenReal', 'subdistribucion'));
                 
                 const celdaUtilidad = document.createElement('td');
-                celdaUtilidad.textContent = utilidad.toLocaleString('es-MX', { minimumFractionDigits: 2 });
+                celdaUtilidad.appendChild(formatearValor(utilidad, false, false, true));
                 
                 const celdaPorcentajeFactor = document.createElement('td');
                 celdaPorcentajeFactor.textContent = (porcentajeFactor * 100).toFixed(6) + '%';
                 
                 const celdaImporteCalculado = document.createElement('td');
-                celdaImporteCalculado.textContent = importeCalculado.toLocaleString('es-MX', { minimumFractionDigits: 2 });
+                celdaImporteCalculado.appendChild(formatearValor(importeCalculado, false, false, true));
                 
                 const celdaComision = document.createElement('td');
-                celdaComision.textContent = comision.toLocaleString('es-MX', { minimumFractionDigits: 2 });
+                celdaComision.appendChild(formatearValor(comision, false, false, true));
                 
                 fila.appendChild(celdaConcepto);
                 fila.appendChild(celdaMrgEsper);
@@ -857,11 +920,21 @@
             // Agregar fila de total
             const filaTotalSubdistribucion = document.createElement('tr');
             filaTotalSubdistribucion.classList.add('total-row');
-            filaTotalSubdistribucion.innerHTML = `
-                <td colspan="6">TOTAL:</td>
-                <td>${totalImporteSubdistribucion.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</td>
-                <td>${totalComisionSubdistribucion.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</td>
-            `;
+            
+            const celdaTotalConceptoSub = document.createElement('td');
+            celdaTotalConceptoSub.colSpan = 6;
+            celdaTotalConceptoSub.textContent = 'TOTAL:';
+            
+            const celdaTotalImporteSub = document.createElement('td');
+            celdaTotalImporteSub.appendChild(formatearValor(totalImporteSubdistribucion, false, false, true));
+            
+            const celdaTotalComisionSub = document.createElement('td');
+            celdaTotalComisionSub.appendChild(formatearValor(totalComisionSubdistribucion, false, false, true));
+            
+            filaTotalSubdistribucion.appendChild(celdaTotalConceptoSub);
+            filaTotalSubdistribucion.appendChild(celdaTotalImporteSub);
+            filaTotalSubdistribucion.appendChild(celdaTotalComisionSub);
+            
             tablaSubdistribucion.appendChild(filaTotalSubdistribucion);
             
             document.getElementById('subdistribucion-total').textContent = '$' + totalComisionSubdistribucion.toLocaleString('es-MX', { minimumFractionDigits: 2 });
@@ -898,25 +971,25 @@
                 celdaConcepto.textContent = item.concepto;
                 
                 const celdaMrgEsper = document.createElement('td');
-                celdaMrgEsper.appendChild(formatearValor(item.mrgEsper, false, true));
+                celdaMrgEsper.appendChild(crearCampoEditableConPorcentaje(item.mrgEsper, index, 'mrgEsper', 'menudeo'));
                 
                 const celdaImporte = document.createElement('td');
                 celdaImporte.appendChild(crearCampoEditable(item.importe, 'number', index, 'importe', 'menudeo'));
                 
                 const celdaMargenReal = document.createElement('td');
-                celdaMargenReal.appendChild(crearCampoEditablePorcentaje(item.margenReal, index, 'margenReal', 'menudeo'));
+                celdaMargenReal.appendChild(crearCampoEditableConPorcentaje(item.margenReal, index, 'margenReal', 'menudeo'));
                 
                 const celdaUtilidad = document.createElement('td');
-                celdaUtilidad.textContent = utilidad.toLocaleString('es-MX', { minimumFractionDigits: 2 });
+                celdaUtilidad.appendChild(formatearValor(utilidad, false, false, true));
                 
                 const celdaPorcentajeFactor = document.createElement('td');
                 celdaPorcentajeFactor.textContent = (porcentajeFactor * 100).toFixed(6) + '%';
                 
                 const celdaImporteCalculado = document.createElement('td');
-                celdaImporteCalculado.textContent = importeCalculado.toLocaleString('es-MX', { minimumFractionDigits: 2 });
+                celdaImporteCalculado.appendChild(formatearValor(importeCalculado, false, false, true));
                 
                 const celdaComision = document.createElement('td');
-                celdaComision.textContent = comision.toLocaleString('es-MX', { minimumFractionDigits: 2 });
+                celdaComision.appendChild(formatearValor(comision, false, false, true));
                 
                 fila.appendChild(celdaConcepto);
                 fila.appendChild(celdaMrgEsper);
@@ -933,11 +1006,21 @@
             // Agregar fila de total
             const filaTotalMenudeo = document.createElement('tr');
             filaTotalMenudeo.classList.add('total-row');
-            filaTotalMenudeo.innerHTML = `
-                <td colspan="6">TOTAL:</td>
-                <td>${totalImporteMenudeo.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</td>
-                <td>${totalComisionMenudeo.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</td>
-            `;
+            
+            const celdaTotalConceptoMen = document.createElement('td');
+            celdaTotalConceptoMen.colSpan = 6;
+            celdaTotalConceptoMen.textContent = 'TOTAL:';
+            
+            const celdaTotalImporteMen = document.createElement('td');
+            celdaTotalImporteMen.appendChild(formatearValor(totalImporteMenudeo, false, false, true));
+            
+            const celdaTotalComisionMen = document.createElement('td');
+            celdaTotalComisionMen.appendChild(formatearValor(totalComisionMenudeo, false, false, true));
+            
+            filaTotalMenudeo.appendChild(celdaTotalConceptoMen);
+            filaTotalMenudeo.appendChild(celdaTotalImporteMen);
+            filaTotalMenudeo.appendChild(celdaTotalComisionMen);
+            
             tablaMenudeo.appendChild(filaTotalMenudeo);
             
             document.getElementById('menudeo-total').textContent = '$' + totalComisionMenudeo.toLocaleString('es-MX', { minimumFractionDigits: 2 });
@@ -973,4 +1056,4 @@
 </body>
 </html>
 
-<p>&copy; FRANCISCO JAVIER CEREZO RAMOS 08.10.2025</p>
+<p>&copy; FRANCISCO JAVIER CEREZO RAMOS 16.10.2025</p>
