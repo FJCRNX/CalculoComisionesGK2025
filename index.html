@@ -324,11 +324,6 @@
             display: none;
         }
         
-        /* Estilo para mantener el espacio cuando se oculta el 12% */
-       // .urbanizacion-hidden {
-        //    visibility: hidden;
-        }
-        
         /* Estilo para campos con símbolo % */
         .percent-container {
             display: flex;
@@ -372,6 +367,15 @@
         
         .tabs::-webkit-scrollbar-thumb:hover, .results::-webkit-scrollbar-thumb:hover {
             background: var(--primary-color);
+        }
+        
+        /* Estilo para campos no editables */
+        .non-editable {
+            background-color: transparent;
+            border: none;
+            width: 100%;
+            padding: 3px;
+            font-size: 0.75rem;
         }
     </style>
 </head>
@@ -601,12 +605,19 @@
             return importe * (margenReal / 100);
         }
 
-        function calcularPorcentajeFactor(margenReal, mrgEsper, factor, esUrbanizacion = false) {
+        function calcularPorcentajeFactor(margenReal, mrgEsper, factor, esUrbanizacion = false, esMayoreo = false, ventas = 0, meta = 0) {
             if (mrgEsper === 0) return 0;
+            
+            // Para Mayoreo, el cálculo es diferente
+            if (esMayoreo) {
+                return (ventas / meta) * (factor / 100);
+            }
+            
             // Para urbanización, el factor es el mismo que el factor de comisión
             if (esUrbanizacion) {
                 return factor / 100;
             }
+            
             return (margenReal / mrgEsper) * (factor / 100);
         }
 
@@ -727,6 +738,20 @@
             return container;
         }
 
+        // Función para mostrar valores no editables
+        function crearCampoNoEditable(valor, esPorcentaje = false) {
+            const span = document.createElement('span');
+            span.classList.add('non-editable');
+            
+            let valorFormateado = valor;
+            if (esPorcentaje) {
+                valorFormateado = valor.toFixed(2) + '%';
+            }
+            
+            span.textContent = valorFormateado;
+            return span;
+        }
+
         // Función para calcular y mostrar resultados
         function calcularComisiones() {
             // Mayoreo
@@ -764,7 +789,7 @@
                 }
                 
                 const utilidad = calcularUtilidad(item.importe, item.margenReal);
-                const porcentajeFactor = calcularPorcentajeFactor(item.margenReal, item.mrgEsper, factorMayoreo, item.esUrbanizacion);
+                const porcentajeFactor = calcularPorcentajeFactor(item.margenReal, item.mrgEsper, factorMayoreo, item.esUrbanizacion, true, ventasMayoreo, metaMayoreo);
                 const importeCalculado = calcularImporte(porcentajeFactor, utilidad, item.concepto);
                 const comision = calcularComision(importeCalculado, alcanceMayoreo);
                 
@@ -778,27 +803,8 @@
                 celdaConcepto.textContent = item.concepto;
                 
                 const celdaMrgEsper = document.createElement('td');
-                // Ocultar el valor 12 en urbanización pero mantener el espacio
-                if (item.esUrbanizacion && item.mrgEsper === 12) {
-                    celdaMrgEsper.classList.add('urbanizacion-hidden');
-                    // Crear un campo vacío para mantener el espacio
-                    const container = document.createElement('div');
-                    container.classList.add('percent-container');
-                    const input = document.createElement('input');
-                    input.type = 'number';
-                    input.value = '';
-                    input.classList.add('editable');
-                    input.style.visibility = 'hidden';
-                    const percentSymbol = document.createElement('span');
-                    percentSymbol.textContent = '%';
-                    percentSymbol.classList.add('percent-symbol');
-                    percentSymbol.style.visibility = 'hidden';
-                    container.appendChild(input);
-                    container.appendChild(percentSymbol);
-                    celdaMrgEsper.appendChild(container);
-                } else {
-                    celdaMrgEsper.appendChild(crearCampoEditableConPorcentaje(item.mrgEsper, index, 'mrgEsper', 'mayoreo'));
-                }
+                // MRG ESPER no es editable, solo se muestra
+                celdaMrgEsper.appendChild(crearCampoNoEditable(item.mrgEsper, true));
                 
                 const celdaImporte = document.createElement('td');
                 celdaImporte.appendChild(crearCampoEditable(item.importe, 'number', index, 'importe', 'mayoreo'));
@@ -885,7 +891,8 @@
                 celdaConcepto.textContent = item.concepto;
                 
                 const celdaMrgEsper = document.createElement('td');
-                celdaMrgEsper.appendChild(crearCampoEditableConPorcentaje(item.mrgEsper, index, 'mrgEsper', 'subdistribucion'));
+                // MRG ESPER no es editable, solo se muestra
+                celdaMrgEsper.appendChild(crearCampoNoEditable(item.mrgEsper, true));
                 
                 const celdaImporte = document.createElement('td');
                 celdaImporte.appendChild(crearCampoEditable(item.importe, 'number', index, 'importe', 'subdistribucion'));
@@ -971,7 +978,8 @@
                 celdaConcepto.textContent = item.concepto;
                 
                 const celdaMrgEsper = document.createElement('td');
-                celdaMrgEsper.appendChild(crearCampoEditableConPorcentaje(item.mrgEsper, index, 'mrgEsper', 'menudeo'));
+                // MRG ESPER no es editable, solo se muestra
+                celdaMrgEsper.appendChild(crearCampoNoEditable(item.mrgEsper, true));
                 
                 const celdaImporte = document.createElement('td');
                 celdaImporte.appendChild(crearCampoEditable(item.importe, 'number', index, 'importe', 'menudeo'));
@@ -1056,4 +1064,4 @@
 </body>
 </html>
 
-<p>&copy; FRANCISCO JAVIER CEREZO RAMOS 16.10.2025</p>
+<p>&copy; FRANCISCO JAVIER CEREZO RAMOS 25.10.2025</p>
