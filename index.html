@@ -288,28 +288,31 @@
         
         /* Anchos específicos para columnas de la tabla */
         .results th:nth-child(1),
-        .results td:nth-child(1) { width: 18%; min-width: 100px; } /* CONCEPTO */
+        .results td:nth-child(1) { width: 16%; min-width: 90px; } /* CONCEPTO */
         
         .results th:nth-child(2),
-        .results td:nth-child(2) { width: 8%; min-width: 70px; } /* MRG ESPER */
+        .results td:nth-child(2) { width: 7%; min-width: 60px; } /* MRG ESPER */
         
         .results th:nth-child(3),
-        .results td:nth-child(3) { width: 10%; min-width: 80px; } /* IMPORTE */
+        .results td:nth-child(3) { width: 9%; min-width: 70px; } /* IMPORTE */
         
         .results th:nth-child(4),
-        .results td:nth-child(4) { width: 10%; min-width: 80px; } /* MARGEN REAL */
+        .results td:nth-child(4) { width: 9%; min-width: 70px; } /* MARGEN REAL */
         
         .results th:nth-child(5),
-        .results td:nth-child(5) { width: 10%; min-width: 80px; } /* UTILIDAD */
+        .results td:nth-child(5) { width: 9%; min-width: 70px; } /* UTILIDAD */
         
         .results th:nth-child(6),
-        .results td:nth-child(6) { width: 12%; min-width: 90px; } /* % FACTOR */
+        .results td:nth-child(6) { width: 12%; min-width: 80px; } /* Importe &"% Factor:"Comisión"&100% */
         
         .results th:nth-child(7),
-        .results td:nth-child(7) { width: 12%; min-width: 90px; } /* $ IMPORTE */
+        .results td:nth-child(7) { width: 10%; min-width: 80px; } /* % FACTOR */
         
         .results th:nth-child(8),
-        .results td:nth-child(8) { width: 20%; min-width: 110px; } /* COMISIÓN GANADA */
+        .results td:nth-child(8) { width: 10%; min-width: 80px; } /* $ IMPORTE */
+        
+        .results th:nth-child(9),
+        .results td:nth-child(9) { width: 18%; min-width: 100px; } /* COMISIÓN GANADA */
 
         /* Para la fila de título que ocupa todas las columnas */
         .section-title td {
@@ -405,7 +408,7 @@
                 </div>
                 <div class="parameter">
                     <label for="mayoreo-ventas">Ventas Mes Sin Filial:</label>
-                    <input type="number" id="mayoreo-ventas" value="0">
+                    <input type="number" id="mayoreo-ventas" value="900000">
                 </div>
                 <div class="parameter hidden">
                     <label for="mayoreo-meta-minima">Meta Mínima:</label>
@@ -422,6 +425,7 @@
                             <th>IMPORTE</th>
                             <th>MARGEN REAL</th>
                             <th>UTILIDAD</th>
+                            <th>Importe &"% Factor:"Comisión"&100%</th>
                             <th>% FACTOR</th>
                             <th>$ IMPORTE</th>
                             <th>COMISIÓN GANADA</th>
@@ -479,6 +483,7 @@
                             <th>IMPORTE</th>
                             <th>MARGEN REAL</th>
                             <th>UTILIDAD</th>
+                            <th>Importe &"% Factor:"Comisión"&100%</th>
                             <th>% FACTOR</th>
                             <th>$ IMPORTE</th>
                             <th>COMISIÓN GANADA</th>
@@ -532,6 +537,7 @@
                             <th>IMPORTE</th>
                             <th>MARGEN REAL</th>
                             <th>UTILIDAD</th>
+                            <th>Importe &"% Factor:"Comisión"&100%</th>
                             <th>% FACTOR</th>
                             <th>$ IMPORTE</th>
                             <th>COMISIÓN GANADA</th>
@@ -605,12 +611,26 @@
             return importe * (margenReal / 100);
         }
 
-        function calcularPorcentajeFactor(margenReal, mrgEsper, factor, esUrbanizacion = false, esMayoreo = false, ventas = 0, meta = 0) {
+        // Función CORREGIDA para calcular Importe &"% Factor:"Comisión"&100%
+        function calcularImporteFactorComision(utilidad, factor, esMayoreo = false, esSubdistribucion = false, ventas = 0, meta = 0) {
+            // Para Mayoreo y Subdistribución, el cálculo debe ser sin el factor de avance (ventas/meta)
+            // para mostrar lo que ganaría si llega al 100% de la meta
+            if (esMayoreo || esSubdistribucion) {
+                return utilidad * (factor / 100); // Eliminamos el factor (ventas/meta)
+            }
+            
+            // Para Menudeo, cálculo simple (sin cambios)
+            return utilidad * (factor / 100);
+        }
+
+        // Función CORREGIDA para calcular % FACTOR
+        function calcularPorcentajeFactor(margenReal, mrgEsper, factor, esUrbanizacion = false, esMayoreo = false, esSubdistribucion = false, ventas = 0, meta = 0) {
             if (mrgEsper === 0) return 0;
             
-            // Para Mayoreo, el cálculo es diferente
-            if (esMayoreo) {
-                return (ventas / meta) * (factor / 100);
+            // Para Mayoreo y Subdistribución, el % FACTOR debe incluir el factor de avance (ventas/meta)
+            if (esMayoreo || esSubdistribucion) {
+                const avance = ventas / meta;
+                return (factor / 100) * Math.min(avance, 1); // No exceder del 100%
             }
             
             // Para urbanización, el factor es el mismo que el factor de comisión
@@ -618,22 +638,40 @@
                 return factor / 100;
             }
             
+            // Para otros casos (como Menudeo), cálculo basado en margen real vs esperado
             return (margenReal / mrgEsper) * (factor / 100);
         }
 
-        function calcularImporte(porcentajeFactor, utilidad, concepto) {
+        // Función CORREGIDA para calcular Importe
+        function calcularImporte(porcentajeFactor, utilidad, concepto, esMayoreo = false, esSubdistribucion = false, ventas = 0, meta = 0) {
+            let baseCalculo = porcentajeFactor * utilidad;
+            
+            // Aplicar ajustes por tipo de crédito y corresponsabilidad
             if (concepto.includes("CREDITO 38 A 60")) {
-                return (porcentajeFactor * utilidad) / 2;
+                baseCalculo = baseCalculo / 2;
             } else if (concepto.includes("CREDITO 61 O MAS")) {
-                return (porcentajeFactor * utilidad) * 0;
+                baseCalculo = baseCalculo * 0;
             } else if (concepto.includes("CORRESPONSABILIDAD")) {
-                return -(porcentajeFactor * utilidad) / 2;
-            } else {
-                return porcentajeFactor * utilidad;
+                baseCalculo = -(baseCalculo / 2);
             }
+            
+            // Para Mayoreo y Subdistribución, aplicar el factor de alcance adicional si es necesario
+            if (esMayoreo || esSubdistribucion) {
+                const avance = ventas / meta;
+                return baseCalculo * Math.min(avance, 1);
+            }
+            
+            return baseCalculo;
         }
 
-        function calcularComision(importeCalculado, alcance) {
+        // Función CORREGIDA para calcular Comisión Ganada
+        function calcularComision(importeCalculado, alcance, esMayoreo = false, esSubdistribucion = false) {
+            // Para Mayoreo y Subdistribución, la comisión ya incluye el factor de avance en el cálculo del importe
+            if (esMayoreo || esSubdistribucion) {
+                return importeCalculado;
+            }
+            
+            // Para Menudeo, aplicar el factor de alcance
             return alcance >= 1 ? importeCalculado : alcance * importeCalculado;
         }
 
@@ -779,7 +817,7 @@
                     
                     const celdaConcepto = document.createElement('td');
                     celdaConcepto.textContent = item.concepto;
-                    celdaConcepto.colSpan = 8; // Ocupa todas las columnas
+                    celdaConcepto.colSpan = 9; // Ocupa todas las columnas
                     celdaConcepto.style.textAlign = 'center';
                     celdaConcepto.style.fontWeight = 'bold';
                     
@@ -789,9 +827,10 @@
                 }
                 
                 const utilidad = calcularUtilidad(item.importe, item.margenReal);
-                const porcentajeFactor = calcularPorcentajeFactor(item.margenReal, item.mrgEsper, factorMayoreo, item.esUrbanizacion, true, ventasMayoreo, metaMayoreo);
-                const importeCalculado = calcularImporte(porcentajeFactor, utilidad, item.concepto);
-                const comision = calcularComision(importeCalculado, alcanceMayoreo);
+                const importeFactorComision = calcularImporteFactorComision(utilidad, factorMayoreo, true, false, ventasMayoreo, metaMayoreo);
+                const porcentajeFactor = calcularPorcentajeFactor(item.margenReal, item.mrgEsper, factorMayoreo, item.esUrbanizacion, true, false, ventasMayoreo, metaMayoreo);
+                const importeCalculado = calcularImporte(porcentajeFactor, utilidad, item.concepto, true, false, ventasMayoreo, metaMayoreo);
+                const comision = calcularComision(importeCalculado, alcanceMayoreo, true, false);
                 
                 totalImporteMayoreo += importeCalculado;
                 totalComisionMayoreo += comision;
@@ -815,8 +854,12 @@
                 const celdaUtilidad = document.createElement('td');
                 celdaUtilidad.appendChild(formatearValor(utilidad, false, false, true));
                 
+                // Nueva columna: Importe &"% Factor:"Comisión"&100%
+                const celdaImporteFactorComision = document.createElement('td');
+                celdaImporteFactorComision.appendChild(formatearValor(importeFactorComision, false, false, true));
+                
                 const celdaPorcentajeFactor = document.createElement('td');
-                celdaPorcentajeFactor.textContent = (porcentajeFactor * 100).toFixed(6) + '%';
+                celdaPorcentajeFactor.appendChild(formatearValor(porcentajeFactor, true));
                 
                 const celdaImporteCalculado = document.createElement('td');
                 celdaImporteCalculado.appendChild(formatearValor(importeCalculado, false, false, true));
@@ -829,6 +872,7 @@
                 fila.appendChild(celdaImporte);
                 fila.appendChild(celdaMargenReal);
                 fila.appendChild(celdaUtilidad);
+                fila.appendChild(celdaImporteFactorComision);
                 fila.appendChild(celdaPorcentajeFactor);
                 fila.appendChild(celdaImporteCalculado);
                 fila.appendChild(celdaComision);
@@ -841,7 +885,7 @@
             filaTotalMayoreo.classList.add('total-row');
             
             const celdaTotalConcepto = document.createElement('td');
-            celdaTotalConcepto.colSpan = 6;
+            celdaTotalConcepto.colSpan = 7;
             celdaTotalConcepto.textContent = 'TOTAL:';
             
             const celdaTotalImporte = document.createElement('td');
@@ -877,9 +921,10 @@
             
             initialData.subdistribucion.forEach((item, index) => {
                 const utilidad = calcularUtilidad(item.importe, item.margenReal);
-                const porcentajeFactor = calcularPorcentajeFactor(item.margenReal, item.mrgEsper, factorSubdistribucion);
-                const importeCalculado = calcularImporte(porcentajeFactor, utilidad, item.concepto);
-                const comision = calcularComision(importeCalculado, alcanceSubdistribucion);
+                const importeFactorComision = calcularImporteFactorComision(utilidad, factorSubdistribucion, false, true, ventasSubdistribucion, metaSubdistribucion);
+                const porcentajeFactor = calcularPorcentajeFactor(item.margenReal, item.mrgEsper, factorSubdistribucion, false, false, true, ventasSubdistribucion, metaSubdistribucion);
+                const importeCalculado = calcularImporte(porcentajeFactor, utilidad, item.concepto, false, true, ventasSubdistribucion, metaSubdistribucion);
+                const comision = calcularComision(importeCalculado, alcanceSubdistribucion, false, true);
                 
                 totalImporteSubdistribucion += importeCalculado;
                 totalComisionSubdistribucion += comision;
@@ -903,8 +948,12 @@
                 const celdaUtilidad = document.createElement('td');
                 celdaUtilidad.appendChild(formatearValor(utilidad, false, false, true));
                 
+                // Nueva columna: Importe &"% Factor:"Comisión"&100%
+                const celdaImporteFactorComision = document.createElement('td');
+                celdaImporteFactorComision.appendChild(formatearValor(importeFactorComision, false, false, true));
+                
                 const celdaPorcentajeFactor = document.createElement('td');
-                celdaPorcentajeFactor.textContent = (porcentajeFactor * 100).toFixed(6) + '%';
+                celdaPorcentajeFactor.appendChild(formatearValor(porcentajeFactor, true));
                 
                 const celdaImporteCalculado = document.createElement('td');
                 celdaImporteCalculado.appendChild(formatearValor(importeCalculado, false, false, true));
@@ -917,6 +966,7 @@
                 fila.appendChild(celdaImporte);
                 fila.appendChild(celdaMargenReal);
                 fila.appendChild(celdaUtilidad);
+                fila.appendChild(celdaImporteFactorComision);
                 fila.appendChild(celdaPorcentajeFactor);
                 fila.appendChild(celdaImporteCalculado);
                 fila.appendChild(celdaComision);
@@ -929,7 +979,7 @@
             filaTotalSubdistribucion.classList.add('total-row');
             
             const celdaTotalConceptoSub = document.createElement('td');
-            celdaTotalConceptoSub.colSpan = 6;
+            celdaTotalConceptoSub.colSpan = 7;
             celdaTotalConceptoSub.textContent = 'TOTAL:';
             
             const celdaTotalImporteSub = document.createElement('td');
@@ -964,6 +1014,7 @@
             
             initialData.menudeo.forEach((item, index) => {
                 const utilidad = calcularUtilidad(item.importe, item.margenReal);
+                const importeFactorComision = calcularImporteFactorComision(utilidad, factorMenudeo);
                 const porcentajeFactor = calcularPorcentajeFactor(item.margenReal, item.mrgEsper, factorMenudeo);
                 const importeCalculado = calcularImporte(porcentajeFactor, utilidad, item.concepto);
                 const comision = calcularComision(importeCalculado, alcanceMenudeo);
@@ -990,8 +1041,12 @@
                 const celdaUtilidad = document.createElement('td');
                 celdaUtilidad.appendChild(formatearValor(utilidad, false, false, true));
                 
+                // Nueva columna: Importe &"% Factor:"Comisión"&100%
+                const celdaImporteFactorComision = document.createElement('td');
+                celdaImporteFactorComision.appendChild(formatearValor(importeFactorComision, false, false, true));
+                
                 const celdaPorcentajeFactor = document.createElement('td');
-                celdaPorcentajeFactor.textContent = (porcentajeFactor * 100).toFixed(6) + '%';
+                celdaPorcentajeFactor.appendChild(formatearValor(porcentajeFactor, true));
                 
                 const celdaImporteCalculado = document.createElement('td');
                 celdaImporteCalculado.appendChild(formatearValor(importeCalculado, false, false, true));
@@ -1004,6 +1059,7 @@
                 fila.appendChild(celdaImporte);
                 fila.appendChild(celdaMargenReal);
                 fila.appendChild(celdaUtilidad);
+                fila.appendChild(celdaImporteFactorComision);
                 fila.appendChild(celdaPorcentajeFactor);
                 fila.appendChild(celdaImporteCalculado);
                 fila.appendChild(celdaComision);
@@ -1016,7 +1072,7 @@
             filaTotalMenudeo.classList.add('total-row');
             
             const celdaTotalConceptoMen = document.createElement('td');
-            celdaTotalConceptoMen.colSpan = 6;
+            celdaTotalConceptoMen.colSpan = 7;
             celdaTotalConceptoMen.textContent = 'TOTAL:';
             
             const celdaTotalImporteMen = document.createElement('td');
@@ -1064,4 +1120,4 @@
 </body>
 </html>
 
-<p>&copy; FRANCISCO JAVIER CEREZO RAMOS 25.10.2025</p>
+<p>&copy; FRANCISCO JAVIER CEREZO RAMOS 28.10.2025</p>
